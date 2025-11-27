@@ -1,0 +1,15 @@
+id,title,author,category,qty,status
+1,Java Basics,John Smith,Programming,5,true
+2,C++ Mastery,Robert Miller,Programming,3,true
+3,Data Structures,Sarah Johnson,Computer Science,7,true
+4,Operating Systems,Andrew Silva,Computer Science,4,true
+5,Database Fundamentals,Maria Allen,Database,6,true
+6,Web Development,Chris Brown,Programming,8,true
+7,Artificial Intelligence,Nathan Lee,Technology,2,true
+8,Networking Essentials,David Kim,Technology,5,true
+9,The Clean Coder,Robert C. Martin,Programming,3,true
+10,Cyber Security 101,Michael Clark,Security,4,true
+11,java,Chan chaya,backend,5,true
+12,Phthon,Ing Davan,backend,2,true
+13,Linux,Kim Chansokpheng,Cyber,4,true
+14,Lord Of The Ring,Chhay Davin,History,1,true

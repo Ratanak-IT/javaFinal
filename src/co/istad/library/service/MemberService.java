@@ -7,7 +7,7 @@ import java.util.List;
 public interface MemberService {
     void addMember(Member member);
     void updateMember(Member member);
-    void deleteMember(int id);
+    Boolean deleteMember(int id);
     List<Member> findAll();
     Member getById(int id);
 }

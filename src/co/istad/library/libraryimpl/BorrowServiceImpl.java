@@ -36,19 +36,29 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public void returnBook(int borrowId) {
+    public boolean returnBook(int borrowId) {
         for (BorrowRecord r : db.getBorrowRecords()) {
             if (r.getId() == borrowId && !r.isReturned()) {
                 r.setReturned(true);
-                Book b = db.getBooks().stream().filter(book -> book.getId() == r.getBook().getId()).findFirst().orElse(null);
+
+                // Increase book qty
+                Book b = db.getBooks().stream()
+                        .filter(book -> book.getId() == r.getBook().getId())
+                        .findFirst()
+                        .orElse(null);
+
                 if (b != null) {
                     b.setQty(b.getQty() + r.getQty());
+                    // auto update status
+                    b.setStatus(b.getQty() > 0);
                 }
-                return;
+
+                return true;   // Returning successful
             }
         }
-        System.out.println("Borrow record not found or already returned.");
+        return false;  // Borrow ID not found or already returned
     }
+
 
     @Override
     public List<BorrowRecord> findAll() { return db.getBorrowRecords(); }

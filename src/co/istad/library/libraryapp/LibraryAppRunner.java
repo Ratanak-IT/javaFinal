@@ -7,6 +7,7 @@ import co.istad.library.util.ImportUtil;
 import co.istad.library.util.InputUtil;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,8 +51,6 @@ public class LibraryAppRunner {
         }
     }
     public void run() {
-        User currentUser;
-
         while (true) {
             System.out.println(DisplayUtil.LOGINMENU);
             int opt = InputUtil.readInt("Enter option: ");
@@ -59,17 +58,15 @@ public class LibraryAppRunner {
             switch (opt) {
                 case 1 -> {
                     // Login loop
-                    while (true) {
+                    while (userService.getCurrentUser() == null) {
                         String username = InputUtil.readString("Username: ");
                         String password = InputUtil.readString("Password: ");
-                        currentUser = userService.login(username, password);
-                        if (currentUser != null) {
-                            System.out.println("Welcome " + currentUser.getUsername() +
-                                    (currentUser.isAdmin() ? " (Admin)" : " (User)"));
-                            break;
-                        }
-                        System.out.println("Invalid credentials. Try again.");
+                        userService.login(username, password);
                     }
+
+                    User currentUser = userService.getCurrentUser();
+                    System.out.println("Welcome " + currentUser.getUsername() +
+                            (currentUser.isAdmin() ? " (Admin)" : " (User)"));
 
                     // Menu loop
                     int option;
@@ -93,8 +90,11 @@ public class LibraryAppRunner {
                                 case 7 -> returnBookFlow();
                                 case 8 -> manageMembersFlow(currentUser);
                                 case 9 -> viewBorrowRecordsFlow();
-                                case 10-> exportDataMenu();
-                                case 11 -> System.out.println("Logging out...");
+                                case 10 -> exportDataMenu();
+                                case 11 -> {
+                                    userService.logout(); // <-- call logout here
+                                    break; // exit menu loop
+                                }
                                 case 0 -> {
                                     System.out.println("Exit System successfully");
                                     System.exit(0);
@@ -107,12 +107,20 @@ public class LibraryAppRunner {
                                 case 2 -> searchBookFlow();
                                 case 3 -> borrowBookFlow();
                                 case 4 -> returnBookFlow();
-                                case 0 -> System.out.println("Logging out...");
+                                case 5 -> exportDataMenu();
+                                case 6 -> {
+                                    userService.logout(); // logout for normal user
+                                    break; // exit menu loop
+                                }
+                                case 0 -> {
+                                    System.out.println("Exit System successfully");
+                                    System.exit(0);
+                                }
                                 default -> System.out.println("Invalid option.");
                             }
                         }
 
-                    } while (option != 0);
+                    } while (userService.getCurrentUser() != null); // loop until user logs out
                 }
                 case 2 -> {
                     System.out.println("Exiting program.");
@@ -122,7 +130,6 @@ public class LibraryAppRunner {
             }
         }
     }
-
     // ---------- flows ----------
 
     private void addBookFlow(User user) {
@@ -130,13 +137,38 @@ public class LibraryAppRunner {
             System.out.println("Permission denied — admin only.");
             return;
         }
-        String title = InputUtil.readString("Title: ");
-        String author = InputUtil.readString("Author: ");
-        String category = InputUtil.readString("Category: ");
+        String title;
+        while (true) {
+            title = InputUtil.readString("Title : ").trim();
+            if (title.length() >= 4) {
+                break;
+            } else {
+                System.out.println("Title must be at least 4 letters. Try again.");
+            }
+        }
+        String author;
+        while (true) {
+            author = InputUtil.readString("Author : ").trim();
+            if (author.length() >= 5 && author.matches("[a-zA-Z ]+")) {
+                break;
+            } else {
+                System.out.println("Author must be at least 5 letters and contain letters only. Try again.");
+            }
+        }
+        String category;
+        while (true) {
+            category = InputUtil.readString("Category (at least 5 letters, letters only): ").trim();
+            if (category.length() >= 5 && category.matches("[a-zA-Z ]+")) {
+                break;
+            } else {
+                System.out.println("Category must be at least 5 letters and contain letters only. Try again.");
+            }
+        }
         int qty = InputUtil.readInt("Qty: ");
         Book book = new Book(title, author, category, qty);
         bookService.addBook(book);
         System.out.println("Book added with ID: " + book.getId());
+
     }
 
     private void listBooksFlow() {
@@ -169,13 +201,39 @@ public class LibraryAppRunner {
     }
 
     private void searchBookFlow() {
-        String keyword = InputUtil.readString("Search (id/title/author/category): ");
-        List<Book> results = bookService.search(keyword);
-        if (results.isEmpty()) {
-            System.out.println("No results found for: " + keyword);
-            return;
+        System.out.println(DisplayUtil.SEARCHMENU);
+        int choice = InputUtil.readInt("Enter choice : ");
+
+        List<Book> results = new ArrayList<>();
+
+        switch (choice) {
+            case 1:
+                int id = InputUtil.readInt("Enter ID: ");
+                results = bookService.searchById(id);
+                break;
+            case 2:
+                String title = InputUtil.readString("Enter Title: ");
+                results = bookService.searchByTitle(title);
+                break;
+            case 3:
+                String author = InputUtil.readString("Enter Author: ");
+                results = bookService.searchByAuthor(author);
+                break;
+            case 4:
+                String category = InputUtil.readString("Enter Category: ");
+                results = bookService.searchByCategory(category);
+                break;
+            case 0: {}
+            default:
+                System.out.println("Invalid choice.");
+                return;
         }
-        DisplayUtil.printBooks(results);
+
+        if (results.isEmpty()) {
+            System.out.println("No results found.");
+        } else {
+            DisplayUtil.printBooks(results);
+        }
     }
 
     private void updateBookFlow(User user) {
@@ -183,33 +241,67 @@ public class LibraryAppRunner {
             System.out.println("Permission denied — admin only.");
             return;
         }
+
         int id = InputUtil.readInt("Book ID to update: ");
         Book book = bookService.getById(id);
         if (book == null) {
             System.out.println("Book not found.");
             return;
         }
-        System.out.println("Leave blank to keep current value.");
-        String newTitle = InputUtil.readString("New title (" + book.getTitle() + "): ");
-        String newAuthor = InputUtil.readString("New author (" + book.getAuthor() + "): ");
-        String newCategory = InputUtil.readString("New category (" + book.getCategory() + "): ");
-        String qtyStr = InputUtil.readString("New qty (" + book.getQty() + "): ");
-        String statusStr = InputUtil.readString("Status true/false (" + book.isStatus() + "): ");
 
-        if (!newTitle.isEmpty()) book.setTitle(newTitle);
-        if (!newAuthor.isEmpty()) book.setAuthor(newAuthor);
-        if (!newCategory.isEmpty()) book.setCategory(newCategory);
-        if (!qtyStr.isEmpty()) {
-            try {
-                book.setQty(Integer.parseInt(qtyStr));
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid qty input — keeping previous value.");
+        System.out.println("Leave blank to keep current value.");
+
+        // Title
+        while (true) {
+            String newTitle = InputUtil.readString("New title (" + book.getTitle() + "): ").trim();
+            if (newTitle.isEmpty()) break; // keep old
+            if (newTitle.length() >= 4) {
+                book.setTitle(newTitle);
+                break;
+            } else {
+                System.out.println("Title must be at least 4 letters.");
             }
         }
-        if (!statusStr.isEmpty()) book.setStatus(Boolean.parseBoolean(statusStr));
+
+        // Author
+        while (true) {
+            String newAuthor = InputUtil.readString("New author (" + book.getAuthor() + "): ").trim();
+            if (newAuthor.isEmpty()) break;
+            if (newAuthor.length() >= 5 && newAuthor.matches("[a-zA-Z ]+")) {
+                book.setAuthor(newAuthor);
+                break;
+            } else {
+                System.out.println("Author must be at least 5 letters, letters only.");
+            }
+        }
+
+        // Category
+        while (true) {
+            String newCategory = InputUtil.readString("New category (" + book.getCategory() + "): ").trim();
+            if (newCategory.isEmpty()) break;
+            if (newCategory.length() >= 5 && newCategory.matches("[a-zA-Z ]+")) {
+                book.setCategory(newCategory);
+                break;
+            } else {
+                System.out.println("Category must be at least 5 letters, letters only.");
+            }
+        }
+
+        // Quantity
+        while (true) {
+            String qtyStr = InputUtil.readString("New qty (" + book.getQty() + "): ").trim();
+            if (qtyStr.isEmpty()) break;
+            try {
+                book.setQty(Integer.parseInt(qtyStr));
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Qty must be a number.");
+            }
+        }
+        book.setStatus(book.getQty() > 0);
         bookService.updateBook(book);
-        System.out.println("Book updated.");
     }
+
 
     private void deleteBookFlow(User user) {
         if (!user.isAdmin()) {
@@ -261,8 +353,12 @@ public class LibraryAppRunner {
 
     private void returnBookFlow() {
         int borrowId = InputUtil.readInt("Borrow ID to return: ");
-        borrowService.returnBook(borrowId);
-        System.out.println("Return processed (if borrow ID existed).");
+        boolean success = borrowService.returnBook(borrowId);
+        if (success) {
+            System.out.println("Return successfully.");
+        } else {
+            System.out.println("Borrow ID not found.");
+        }
     }
 
     private void manageMembersFlow(User user) {
@@ -272,17 +368,29 @@ public class LibraryAppRunner {
         }
         int opt;
         do {
-            System.out.println("\n=== Manage Members ===");
-            System.out.println("1. Add Member");
-            System.out.println("2. Update Member");
-            System.out.println("3. Delete Member");
-            System.out.println("4. List Members");
-            System.out.println("0. Back to Main Menu");
+            System.out.println(DisplayUtil.ManageMembers);
             opt = InputUtil.readInt("Select: ");
             switch (opt) {
                 case 1 -> {
-                    String name = InputUtil.readString("Member name: ");
-                    String email = InputUtil.readString("Member email: ");
+                    String name;
+                    while (true) {
+                        name = InputUtil.readString("Member name : ").trim();
+                        if (name.length() >= 4) {
+                            break;
+                        } else {
+                            System.out.println("Name must be at least 6 letters. Try again.");
+                        }
+                    }
+
+                    String email;
+                    while (true) {
+                        email = InputUtil.readString("Member email : ").trim();
+                        if (email.equals(email.toLowerCase()) && email.endsWith("@gmail.com")) {
+                            break;
+                        } else {
+                            System.out.println("Email must be all lowercase and end with @gmail.com. Try again.");
+                        }
+                    }
                     Member m = new Member(name, email);
                     memberService.addMember(m);
                     System.out.println("Member added. ID: " + m.getId());
@@ -303,8 +411,13 @@ public class LibraryAppRunner {
                 }
                 case 3 -> {
                     int id = InputUtil.readInt("Member ID to delete: ");
-                    memberService.deleteMember(id);
-                    System.out.println("Member deleted if existed.");
+                    boolean deleted = memberService.deleteMember(id);
+
+                    if (deleted) {
+                        System.out.println("Member deleted successfully.");
+                    } else {
+                        System.out.println("Member ID not found.");
+                    }
                 }
                 case 4 -> DisplayUtil.printMembers(memberService.findAll());
                 case 0 -> {}
@@ -326,11 +439,7 @@ public class LibraryAppRunner {
     private void exportDataMenu() {
         int opt;
         do {
-            System.out.println("\n=== Export Data ===");
-            System.out.println("1. Export Books");
-            System.out.println("2. Export Members");
-            System.out.println("3. Export Borrow Records");
-            System.out.println("0. Back to Main Menu");
+            System.out.println(DisplayUtil.EXPORTMENU);
             opt = InputUtil.readInt("Select: ");
 
             switch (opt) {

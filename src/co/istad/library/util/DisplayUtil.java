@@ -26,27 +26,29 @@ public class DisplayUtil {
         System.out.println(table.render());
     }
     public final static String ADMINMENU= """
-        ==== Admin Menu ====
-         1. Add Book
-         2. List/Paginate Books
-         3. Search Book
-         4. Update Book
-         5. Delete Book
-         6. Borrow Book
-         7. Return Book
-         8. Manage Members
-         9. View Borrow Records & Availability
-         10.Export data
-         11. Logout
-         0. exit system
+        ||============= Admin Menu =============||
+        || 1. Add Book                          ||
+        || 2. List/Paginate Books               ||
+        || 3. Search Book                       ||
+        || 4. Update Book                       ||
+        || 5. Delete Book                       ||
+        || 6. Borrow Book                       ||
+        || 7. Return Book                       ||
+        || 8. Manage Members                    ||
+        || 9. View Borrow Records & Availability||
+        || 10. Export data                      ||
+        || 11. Logout                           ||
+        || 0. exit system                       ||
+        ||======================================||
     """;
     public final static String USERMENU= """
-        ==== Admin Menu ====
+        ==== User Menu ====
          1. List/Paginate Books
-         3. Search Book
-         6. Borrow Book
-         7. Return Book
-         9. View Borrow Records & Availability
+         2. Search Book
+         3. Borrow Book
+         4. Return Book
+         5. Export data
+         6. Logout
          0. Exit
     """;
     public final static String LOGINMENU= """
@@ -60,12 +62,29 @@ public class DisplayUtil {
          [0]. Back to menu
     """;
     public final static String EXPORTMENU= """
-         Export Data
+          === Export Data ===
          [1]. Export Books
          [2]. Export Members
          [3]. Export Borrow Records
          [0]. Back to Main Menu
     """;
+    public final static String ManageMembers= """
+         === Manage Members ===
+          1. Add Member
+          2. Update Member
+          3. Delete Member
+          4. List Members
+          0. Back to Main Menu
+    """;
+        public final static String SEARCHMENU= """
+         === Search Menu ===
+         1. ID
+         2. Title
+         3. Author
+         4. Category
+         0. Back to Main Menu
+    """;
+
 
 
     public static void printMembers(List<Member> members) {

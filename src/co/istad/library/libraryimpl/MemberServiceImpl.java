@@ -26,7 +26,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void deleteMember(int id) { db.getMembers().removeIf(m -> m.getId() == id); }
+    public Boolean deleteMember(int id) {
+        List<Member> members = db.getMembers();
+        for (int i = 0; i < members.size(); i++) {
+            if (members.get(i).getId() == id) {
+                members.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public List<Member> findAll() { return db.getMembers(); }

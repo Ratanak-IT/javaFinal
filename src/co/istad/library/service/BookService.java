@@ -9,6 +9,9 @@ public interface BookService {
     void updateBook(Book book);
     void deleteBook(int id);
     List<Book> findAll();
-    List<Book> search(String keyword);
+    List<Book> searchById(int id);
+    List<Book> searchByTitle(String title);
+    List<Book> searchByAuthor(String author);
+    List<Book> searchByCategory(String category);
     Book getById(int id);
 }

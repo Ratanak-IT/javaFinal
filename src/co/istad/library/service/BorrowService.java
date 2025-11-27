@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface BorrowService {
     void borrow(BorrowRecord record);
-    void returnBook(int borrowId);
+    boolean returnBook(int borrowId);
     List<BorrowRecord> findAll();
 }

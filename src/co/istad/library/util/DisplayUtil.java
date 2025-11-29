@@ -100,7 +100,7 @@ public class DisplayUtil {
 
     public static void printBorrowRecords(List<BorrowRecord> records) {
         Table table = new Table(7, BorderStyle.UNICODE_ROUND_BOX_WIDE);
-        table.addCell("ID"); table.addCell("Member"); table.addCell("Book");
+        table.addCell("Borrow ID"); table.addCell("Member"); table.addCell("Book");
         table.addCell("Qty"); table.addCell("Borrow"); table.addCell("Due"); table.addCell("Returned");
         for (BorrowRecord r : records) {
             table.addCell(String.valueOf(r.getId()));

@@ -157,7 +157,7 @@ public class LibraryAppRunner {
         }
         String category;
         while (true) {
-            category = InputUtil.readString("Category (at least 5 letters, letters only): ").trim();
+            category = InputUtil.readString("Category : ").trim();
             if (category.length() >= 5 && category.matches("[a-zA-Z ]+")) {
                 break;
             } else {
@@ -178,7 +178,7 @@ public class LibraryAppRunner {
             return;
         }
 
-        books = books.stream().sorted(Comparator.comparingInt(Book::getId)).collect(Collectors.toList());
+        books = books.stream().sorted(Comparator.comparingInt(Book::getId).reversed()).collect(Collectors.toList());
         int pageIndex = 0;
         while (true) {
             DisplayUtil.printBooksPage(books, pageIndex, PAGE_SIZE);
@@ -230,7 +230,7 @@ public class LibraryAppRunner {
         }
 
         if (results.isEmpty()) {
-            System.out.println("No results found.");
+            System.out.println("Student ID not found.");
         } else {
             DisplayUtil.printBooks(results);
         }
@@ -399,16 +399,36 @@ public class LibraryAppRunner {
                     int id = InputUtil.readInt("Member ID to update: ");
                     Member mem = memberService.getById(id);
                     if (mem == null) {
-                        System.out.println("Member not found.");
+                        System.out.println("❌ Member not found.");
                         break;
                     }
-                    String newName = InputUtil.readString("New name (" + mem.getName() + "): ");
-                    String newEmail = InputUtil.readString("New email (" + mem.getEmail() + "): ");
-                    if (!newName.isEmpty()) mem.setName(newName);
-                    if (!newEmail.isEmpty()) mem.setEmail(newEmail);
+
+                    // Update Name
+                    while (true) {
+                        String newName = InputUtil.readString("New name (" + mem.getName() + ") or Enter to skip: ");
+                        if (newName.isEmpty()) break; // skip update
+                        if (newName.length() >= 4) {
+                            mem.setName(newName);
+                            break;
+                        }
+                        System.out.println("⚠ Name must be at least 4 characters. Try again.");
+                    }
+
+                    // Update Email
+                    while (true) {
+                        String newEmail = InputUtil.readString("New email (" + mem.getEmail() + ") or Enter to skip: ");
+                        if (newEmail.isEmpty()) break; // skip update
+                        if (newEmail.length()>=16&&newEmail.endsWith("@gmail.com") &&newEmail.equals(newEmail.toLowerCase())) {
+                            mem.setEmail(newEmail);
+                            break;
+                        }
+                        System.out.println("⚠ Email must be at least 6 characters. Try again.");
+                    }
+
                     memberService.updateMember(mem);
-                    System.out.println("Member updated.");
+                    System.out.println("✔ Member updated successfully.");
                 }
+
                 case 3 -> {
                     int id = InputUtil.readInt("Member ID to delete: ");
                     boolean deleted = memberService.deleteMember(id);

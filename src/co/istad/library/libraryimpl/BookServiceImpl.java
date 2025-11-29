@@ -3,11 +3,15 @@ package co.istad.library.libraryimpl;
 import co.istad.library.database.LibraryDatabase;
 import co.istad.library.model.Book;
 import co.istad.library.service.BookService;
+import co.istad.library.util.DisplayUtil;
+import co.istad.library.util.InputUtil;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BookServiceImpl implements BookService {
+    private static final int PAGE_SIZE = 5;
     private final LibraryDatabase db;
 
     public BookServiceImpl(LibraryDatabase db) { this.db = db; }
@@ -75,4 +79,5 @@ public class BookServiceImpl implements BookService {
     public Book getById(int id) {
         return db.getBooks().stream().filter(b -> b.getId() == id).findFirst().orElse(null);
     }
+
 }

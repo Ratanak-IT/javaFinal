@@ -24,7 +24,6 @@ public class BorrowRecord {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
     public Member getMember() { return member; }
     public Book getBook() { return book; }
     public int getQty() { return qty; }

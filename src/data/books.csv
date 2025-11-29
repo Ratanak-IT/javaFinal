@@ -1,6 +1,6 @@
 id,title,author,category,qty,status
 1,Java Basics,John Smith,Programming,5,true
-2,C++ Mastery,Robert Miller,Programming,3,true
+2,C++ Mastery,Robert Miller,Programming,2,true
 3,Data Structures,Sarah Johnson,Computer Science,7,true
 4,Operating Systems,Andrew Silva,Computer Science,4,true
 5,Database Fundamentals,Maria Allen,Database,6,true

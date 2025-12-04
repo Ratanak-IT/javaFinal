@@ -26,8 +26,9 @@ public class DisplayUtil {
         System.out.println(table.render());
     }
     public final static String ADMINMENU= """
-<<<<<<< HEAD
-        ==== Admin Menu ====
+        |---------------------------------------|
+        |               Admin Menu              |
+        |---------------------------------------|
          1. Add Book
          2. List/Paginate Books
          3. Search Book
@@ -37,46 +38,26 @@ public class DisplayUtil {
          7. Return Book
          8. Manage Members
          9. View Borrow Records & Availability
-         10.Export data
+         10. Export data
          11. Logout
          0. exit system
     """;
     public final static String USERMENU= """
-        ==== Admin Menu ====
-         1. List/Paginate Books
-         3. Search Book
-         6. Borrow Book
-         7. Return Book
-         9. View Borrow Records & Availability
-=======
-        ||============= Admin Menu =============||
-        || 1. Add Book                          ||
-        || 2. List/Paginate Books               ||
-        || 3. Search Book                       ||
-        || 4. Update Book                       ||
-        || 5. Delete Book                       ||
-        || 6. Borrow Book                       ||
-        || 7. Return Book                       ||
-        || 8. Manage Members                    ||
-        || 9. View Borrow Records & Availability||
-        || 10. Export data                      ||
-        || 11. Logout                           ||
-        || 0. exit system                       ||
-        ||======================================||
-    """;
-    public final static String USERMENU= """
-        ==== User Menu ====
+        |---------------------------------------|
+        |               User Menu               |
+        |---------------------------------------|
          1. List/Paginate Books
          2. Search Book
          3. Borrow Book
          4. Return Book
          5. Export data
          6. Logout
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
          0. Exit
     """;
     public final static String LOGINMENU= """
-        ==== Login Menu ====
+        |---------------------------------------|
+        |               Login Menu              |
+        |---------------------------------------|
          1. Login
          2. exit
     """;
@@ -86,20 +67,18 @@ public class DisplayUtil {
          [0]. Back to menu
     """;
     public final static String EXPORTMENU= """
-<<<<<<< HEAD
-         Export Data
-=======
-          === Export Data ===
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
+        |---------------------------------------|
+        |            Export Data Menu           |
+        |---------------------------------------|
          [1]. Export Books
          [2]. Export Members
          [3]. Export Borrow Records
          [0]. Back to Main Menu
     """;
-<<<<<<< HEAD
-=======
     public final static String ManageMembers= """
-         === Manage Members ===
+        |---------------------------------------|
+        |           Manage Member Menu          |
+        |---------------------------------------|
           1. Add Member
           2. Update Member
           3. Delete Member
@@ -107,7 +86,9 @@ public class DisplayUtil {
           0. Back to Main Menu
     """;
         public final static String SEARCHMENU= """
-         === Search Menu ===
+        |---------------------------------------|
+        |              Search Menu              |
+        |---------------------------------------|
          1. ID
          2. Title
          3. Author
@@ -115,7 +96,6 @@ public class DisplayUtil {
          0. Back to Main Menu
     """;
 
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
 
 
     public static void printMembers(List<Member> members) {
@@ -131,11 +111,7 @@ public class DisplayUtil {
 
     public static void printBorrowRecords(List<BorrowRecord> records) {
         Table table = new Table(7, BorderStyle.UNICODE_ROUND_BOX_WIDE);
-<<<<<<< HEAD
-        table.addCell("ID"); table.addCell("Member"); table.addCell("Book");
-=======
         table.addCell("Borrow ID"); table.addCell("Member"); table.addCell("Book");
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
         table.addCell("Qty"); table.addCell("Borrow"); table.addCell("Due"); table.addCell("Returned");
         for (BorrowRecord r : records) {
             table.addCell(String.valueOf(r.getId()));

@@ -1,9 +1,5 @@
 package co.istad.library.libraryapp;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
 import co.istad.library.database.LibraryDatabase;
 import co.istad.library.libraryimpl.BookServiceImpl;
 import co.istad.library.libraryimpl.BorrowServiceImpl;

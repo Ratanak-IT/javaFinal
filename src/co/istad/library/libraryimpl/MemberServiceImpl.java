@@ -26,9 +26,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-<<<<<<< HEAD
-    public void deleteMember(int id) { db.getMembers().removeIf(m -> m.getId() == id); }
-=======
     public Boolean deleteMember(int id) {
         List<Member> members = db.getMembers();
         for (int i = 0; i < members.size(); i++) {
@@ -39,7 +36,6 @@ public class MemberServiceImpl implements MemberService {
         }
         return false;
     }
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
 
     @Override
     public List<Member> findAll() { return db.getMembers(); }

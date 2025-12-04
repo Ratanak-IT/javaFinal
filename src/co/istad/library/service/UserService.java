@@ -5,15 +5,6 @@ import co.istad.library.model.User;
 
 public class UserService {
     private final LibraryDatabase db;
-<<<<<<< HEAD
-
-    public UserService(LibraryDatabase db) { this.db = db; }
-
-    public User login(String username, String password) {
-        return db.getUsers().stream()
-                .filter(u -> u.getUsername().equals(username) && u.getPassword().equals(password))
-                .findFirst().orElse(null);
-=======
     private User currentUser; // store the logged-in user
 
     public UserService(LibraryDatabase db) {
@@ -46,6 +37,5 @@ public class UserService {
 
     public User getCurrentUser() {
         return currentUser;
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
     }
 }

@@ -1,6 +1,6 @@
 id,title,author,category,qty,status
 1,Java Basics,John Smith,Programming,5,true
-2,C++ Mastery,Robert Miller,Programming,3,true
+2,C++ Mastery,Robert Miller,Programming,2,true
 3,Data Structures,Sarah Johnson,Computer Science,7,true
 4,Operating Systems,Andrew Silva,Computer Science,4,true
 5,Database Fundamentals,Maria Allen,Database,6,true
@@ -12,7 +12,4 @@ id,title,author,category,qty,status
 11,java,Chan chaya,backend,5,true
 12,Phthon,Ing Davan,backend,2,true
 13,Linux,Kim Chansokpheng,Cyber,4,true
-<<<<<<< HEAD
-=======
 14,Lord Of The Ring,Chhay Davin,History,1,true
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-ID,MemberID,BookID,Qty,BorrowDate,DueDate,Returned
-=======
 id,memberId,bookId,qty,borrowDate,dueDate,returned
 1,1,2,2,2025-11-28,2025-12-05,false
-2,2,3,1,2025-11-28,2025-12-05,false
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
+

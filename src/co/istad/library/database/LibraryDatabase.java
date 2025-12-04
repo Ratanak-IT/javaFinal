@@ -1,10 +1,6 @@
 package co.istad.library.database;
 
 import co.istad.library.model.*;
-<<<<<<< HEAD
-
-=======
->>>>>>> 22168d168fe6e0bf7d5e7becbb3c4b57f02443a8
 import java.util.ArrayList;
 import java.util.List;
 
